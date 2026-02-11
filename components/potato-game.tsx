@@ -142,28 +142,35 @@ function drawKnife(ctx: CanvasRenderingContext2D, x: number, groundY: number) {
   const knifeH = KNIFE_HEIGHT
   const bladeY = groundY - knifeH
   const midX = x + KNIFE_WIDTH / 2
+  const rightEdge = x + KNIFE_WIDTH
+  const handleTop = groundY - 12
 
   ctx.save()
 
-  // blade - sharp pointed tip at top
+  // blade - straight right spine, curved left cutting edge, pointed tip
   ctx.fillStyle = "#c0c0c0"
   ctx.beginPath()
-  ctx.moveTo(midX, bladeY - 10) // sharp point extends above
-  ctx.lineTo(x + KNIFE_WIDTH - 2, bladeY + 14)
-  ctx.lineTo(x + KNIFE_WIDTH - 1, groundY - 14)
-  ctx.lineTo(midX, groundY - 8)
-  ctx.lineTo(x + 1, groundY - 14)
-  ctx.lineTo(x + 2, bladeY + 14)
+  ctx.moveTo(rightEdge - 3, bladeY) // tip at top-right (pointed)
+  // straight spine down the right side
+  ctx.lineTo(rightEdge - 1, handleTop)
+  // bottom of blade across to left
+  ctx.lineTo(x + 1, handleTop)
+  // curved cutting edge up the left side (belly of the knife)
+  ctx.bezierCurveTo(
+    x - 8, handleTop - knifeH * 0.35, // control 1: bulges left
+    x - 6, bladeY + knifeH * 0.15,    // control 2: curves back in
+    rightEdge - 3, bladeY              // back to the tip
+  )
   ctx.closePath()
   ctx.fill()
 
-  // blade shine - follows pointed shape
-  ctx.fillStyle = "rgba(255,255,255,0.45)"
+  // blade shine - thin highlight along the right spine
+  ctx.fillStyle = "rgba(255,255,255,0.5)"
   ctx.beginPath()
-  ctx.moveTo(midX - 1, bladeY - 4)
-  ctx.lineTo(midX + 3, bladeY + 14)
-  ctx.lineTo(midX + 3, groundY - 18)
-  ctx.lineTo(midX - 1, groundY - 16)
+  ctx.moveTo(rightEdge - 4, bladeY + 3)
+  ctx.lineTo(rightEdge - 2, bladeY + 3)
+  ctx.lineTo(rightEdge - 2, handleTop - 4)
+  ctx.lineTo(rightEdge - 4, handleTop - 4)
   ctx.closePath()
   ctx.fill()
 
@@ -171,26 +178,36 @@ function drawKnife(ctx: CanvasRenderingContext2D, x: number, groundY: number) {
   ctx.strokeStyle = "#888"
   ctx.lineWidth = 1
   ctx.beginPath()
-  ctx.moveTo(midX, bladeY - 10)
-  ctx.lineTo(x + KNIFE_WIDTH - 2, bladeY + 14)
-  ctx.lineTo(x + KNIFE_WIDTH - 1, groundY - 14)
-  ctx.lineTo(midX, groundY - 8)
-  ctx.lineTo(x + 1, groundY - 14)
-  ctx.lineTo(x + 2, bladeY + 14)
+  ctx.moveTo(rightEdge - 3, bladeY)
+  ctx.lineTo(rightEdge - 1, handleTop)
+  ctx.lineTo(x + 1, handleTop)
+  ctx.bezierCurveTo(
+    x - 8, handleTop - knifeH * 0.35,
+    x - 6, bladeY + knifeH * 0.15,
+    rightEdge - 3, bladeY
+  )
   ctx.closePath()
   ctx.stroke()
 
   // handle
   ctx.fillStyle = "#5c3a1e"
-  ctx.fillRect(x + 2, groundY - 10, KNIFE_WIDTH - 4, 12)
+  const handleW = KNIFE_WIDTH - 4
+  const handleH = 14
+  const handleX = x + 2
+  const handleY = handleTop - 1
+  ctx.beginPath()
+  ctx.roundRect(handleX, handleY, handleW, handleH, 2)
+  ctx.fill()
   ctx.strokeStyle = "#3e2510"
   ctx.lineWidth = 1
-  ctx.strokeRect(x + 2, groundY - 10, KNIFE_WIDTH - 4, 12)
+  ctx.beginPath()
+  ctx.roundRect(handleX, handleY, handleW, handleH, 2)
+  ctx.stroke()
 
   // handle rivets
   ctx.fillStyle = "#c0a060"
   ctx.beginPath()
-  ctx.arc(midX, groundY - 5, 1.5, 0, Math.PI * 2)
+  ctx.arc(midX, handleY + handleH / 2, 1.5, 0, Math.PI * 2)
   ctx.fill()
 
   ctx.restore()
