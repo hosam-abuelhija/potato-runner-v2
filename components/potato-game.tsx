@@ -12,8 +12,8 @@ const SPEED_INCREMENT = 0.001
 const POTATO_SIZE = 44
 const KNIFE_WIDTH = 20
 const KNIFE_HEIGHT = 50
-const MIN_KNIFE_GAP = 80
-const MAX_KNIFE_GAP = 200
+const MIN_KNIFE_GAP = 200
+const MAX_KNIFE_GAP = 400
 
 interface Knife {
   x: number
@@ -141,39 +141,42 @@ function drawFrenchFries(ctx: CanvasRenderingContext2D, x: number, y: number, si
 function drawKnife(ctx: CanvasRenderingContext2D, x: number, groundY: number) {
   const knifeH = KNIFE_HEIGHT
   const bladeY = groundY - knifeH
+  const midX = x + KNIFE_WIDTH / 2
 
   ctx.save()
 
-  // blade
+  // blade - sharp pointed tip at top
   ctx.fillStyle = "#c0c0c0"
   ctx.beginPath()
-  ctx.moveTo(x, bladeY)
-  ctx.lineTo(x + KNIFE_WIDTH, bladeY)
-  ctx.lineTo(x + KNIFE_WIDTH, groundY - 14)
-  ctx.lineTo(x + KNIFE_WIDTH / 2, groundY - 8)
-  ctx.lineTo(x, groundY - 14)
+  ctx.moveTo(midX, bladeY - 10) // sharp point extends above
+  ctx.lineTo(x + KNIFE_WIDTH - 2, bladeY + 14)
+  ctx.lineTo(x + KNIFE_WIDTH - 1, groundY - 14)
+  ctx.lineTo(midX, groundY - 8)
+  ctx.lineTo(x + 1, groundY - 14)
+  ctx.lineTo(x + 2, bladeY + 14)
   ctx.closePath()
   ctx.fill()
 
-  // blade shine
+  // blade shine - follows pointed shape
   ctx.fillStyle = "rgba(255,255,255,0.45)"
   ctx.beginPath()
-  ctx.moveTo(x + 3, bladeY + 2)
-  ctx.lineTo(x + 7, bladeY + 2)
-  ctx.lineTo(x + 7, groundY - 18)
-  ctx.lineTo(x + 3, groundY - 16)
+  ctx.moveTo(midX - 1, bladeY - 4)
+  ctx.lineTo(midX + 3, bladeY + 14)
+  ctx.lineTo(midX + 3, groundY - 18)
+  ctx.lineTo(midX - 1, groundY - 16)
   ctx.closePath()
   ctx.fill()
 
-  // blade edge
+  // blade edge outline
   ctx.strokeStyle = "#888"
   ctx.lineWidth = 1
   ctx.beginPath()
-  ctx.moveTo(x, bladeY)
-  ctx.lineTo(x + KNIFE_WIDTH, bladeY)
-  ctx.lineTo(x + KNIFE_WIDTH, groundY - 14)
-  ctx.lineTo(x + KNIFE_WIDTH / 2, groundY - 8)
-  ctx.lineTo(x, groundY - 14)
+  ctx.moveTo(midX, bladeY - 10)
+  ctx.lineTo(x + KNIFE_WIDTH - 2, bladeY + 14)
+  ctx.lineTo(x + KNIFE_WIDTH - 1, groundY - 14)
+  ctx.lineTo(midX, groundY - 8)
+  ctx.lineTo(x + 1, groundY - 14)
+  ctx.lineTo(x + 2, bladeY + 14)
   ctx.closePath()
   ctx.stroke()
 
@@ -187,7 +190,7 @@ function drawKnife(ctx: CanvasRenderingContext2D, x: number, groundY: number) {
   // handle rivets
   ctx.fillStyle = "#c0a060"
   ctx.beginPath()
-  ctx.arc(x + KNIFE_WIDTH / 2, groundY - 5, 1.5, 0, Math.PI * 2)
+  ctx.arc(midX, groundY - 5, 1.5, 0, Math.PI * 2)
   ctx.fill()
 
   ctx.restore()
